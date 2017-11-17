@@ -1,4 +1,4 @@
-FROM articulate/articulate-node:8
+FROM articulate/articulate-node:8-jessie
 ARG vips_version=8.5.6
 ENV LD_LIBRARY_PATH=/usr/local/lib
 
