@@ -2,10 +2,8 @@ FROM articulate/articulate-node:8
 ARG vips_version=8.5.6
 ENV LD_LIBRARY_PATH=/usr/local/lib
 
-RUN echo 'deb http://httpredir.debian.org/debian stretch main' >> /etc/apt/sources.list && \
-    echo 'APT::Default-Release "stretch";' > /etc/apt/apt.conf.d/10apt && \
-    apt-get update && \
-    apt-get install -y build-essential graphicsmagick-libmagick-dev-compat/stretch libexpat1-dev libfftw3-dev liborc-0.4-dev libpng-dev libtiff5-dev pngquant && \
+RUN apt-get update && \
+    apt-get install -y build-essential graphicsmagick-libmagick-dev-compat libexpat1-dev libfftw3-dev liborc-0.4-dev libpng-dev libtiff5-dev pngquant && \
     apt-get clean
 
 WORKDIR /tmp
