@@ -6,7 +6,7 @@ RUN apt-get update && \
     apt-get install -y build-essential graphicsmagick-libmagick-dev-compat libexpat1-dev libfftw3-dev liborc-0.4-dev libpng-dev libtiff5-dev pngquant && \
     apt-get clean
 
-WORKDIR /tmp
+WORKDIR /usr/src
 
 RUN mkdir -p vips && \
     curl -Ls https://github.com/jcupitt/libvips/releases/download/v${vips_version}/vips-${vips_version}.tar.gz | tar xzC vips --strip-components=1 && \
@@ -14,13 +14,18 @@ RUN mkdir -p vips && \
     ./configure --disable-static && \
     make && make install && make clean && \
     cd ..
+    
+RUN rm -rf /usr/src/vips
 
-ADD https://github.com/kohler/gifsicle/archive/0e02f7b62a9a3a344c34f92ddb7e178ad3b3e3ff.zip gifsicle.zip
-RUN unzip gifsicle.zip && \
+RUN mkdir -p gifsicle
+ADD https://github.com/kohler/gifsicle/archive/0e02f7b62a9a3a344c34f92ddb7e178ad3b3e3ff.zip /usr/src/gifsicle/gifsicle.zip
+RUN cd gifsicle && \
+    unzip gifsicle.zip && \
     cd gifsicle-0e02f7b62a9a3a344c34f92ddb7e178ad3b3e3ff && \
     autoreconf -i && \
     ./configure --disable-gifview --disable-gifdiff && \
     make install
 
-RUN rm -rf /tmp/*
+RUN rm -rf /usr/src/gifsicle
+
 WORKDIR $SERVICE_ROOT
