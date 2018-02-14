@@ -1,6 +1,7 @@
 FROM articulate/articulate-node:8
 ARG vips_version=8.6.2
 ENV LD_LIBRARY_PATH=/usr/local/lib
+ARG gifsicle_version=1.91
 
 RUN apt-get update && \
     apt-get install -y build-essential graphicsmagick-libmagick-dev-compat libexpat1-dev libfftw3-dev liborc-0.4-dev libpng-dev libtiff5-dev pngquant && \
@@ -15,9 +16,9 @@ RUN mkdir -p vips && \
     make && make install && make clean && \
     cd ..
 
-ADD https://github.com/kohler/gifsicle/archive/0e02f7b62a9a3a344c34f92ddb7e178ad3b3e3ff.zip gifsicle.zip
+ADD https://github.com/kohler/gifsicle/archive/v${gifsicle_version}.zip gifsicle.zip
 RUN unzip gifsicle.zip && \
-    cd gifsicle-0e02f7b62a9a3a344c34f92ddb7e178ad3b3e3ff && \
+    cd gifsicle-${gifsicle_version} && \
     autoreconf -i && \
     ./configure --disable-gifview --disable-gifdiff && \
     make install
