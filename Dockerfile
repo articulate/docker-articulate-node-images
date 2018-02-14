@@ -1,5 +1,5 @@
 FROM articulate/articulate-node:8
-ARG vips_version=8.5.6
+ARG vips_version=8.6.2
 ENV LD_LIBRARY_PATH=/usr/local/lib
 
 RUN apt-get update && \
