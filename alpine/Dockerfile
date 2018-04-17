@@ -35,4 +35,6 @@ RUN cd /tmp && curl -O https://www.lcdf.org/gifsicle/gifsicle-$GIFSICLE_VERSION.
     && cd gifsicle-$GIFSICLE_VERSION \
     && ./configure && make && make install
 
+RUN apk update && apk del curl alpine-sdk wget
+
 WORKDIR $SERVICE_ROOT
