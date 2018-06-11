@@ -23,12 +23,12 @@ ADD https://github.com/jcupitt/libvips/releases/download/v${VIPS_VERSION}/vips-$
 RUN tar xvzf vips.tar.gz \
     && cd vips-${VIPS_VERSION} \
     && ./configure --disable-static \
-    && make && make install && make clean \
+    && make && make install \
+    && ldconfig /usr/local/lib \
+    && make clean \
     && make -s install-strip \
     && cd .. \
     && rm -rf vips*
-
-RUN apk del --purge vips-dependencies
 
 ADD https://github.com/kohler/gifsicle/archive/v${GIFSICLE_VERSION}.zip gifsicle.zip
 RUN unzip gifsicle.zip \
