@@ -1,8 +1,0 @@
-{
-  "name": "articulate-node-images",
-  "docker": {
-    "repos": [
-      "dockerhub"
-    ]
-  }
-}
