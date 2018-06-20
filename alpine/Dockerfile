@@ -1,7 +1,5 @@
 FROM articulate/articulate-node:8-alpine
 
-RUN apk --no-cache add curl alpine-sdk wget autoconf automake
-
 ENV LD_LIBRARY_PATH=/usr/local/lib
 ARG GIFSICLE_VERSION=1.91
 ARG VIPS_VERSION=8.6.3
@@ -9,9 +7,9 @@ ARG PNGQUANT_VERSION=2.11.2
 
 WORKDIR /tmp
 
-RUN apk --no-cache add curl alpine-sdk wget zlib libxml2 glib \
+RUN apk --no-cache add wget curl ca-certificates openssl zlib libxml2 glib \
     gobject-introspection libjpeg-turbo libexif lcms2 fftw giflib libpng \
-    libwebp orc tiff poppler-glib librsvg libgsf openexr
+    libwebp orc tiff poppler-glib librsvg libgsf openexr alpine-sdk autoconf automake
 
 RUN apk --no-cache add --virtual vips-dependencies build-base \
     zlib-dev libxml2-dev glib-dev gobject-introspection-dev \
@@ -46,6 +44,6 @@ RUN unzip gifsicle.zip \
     && ./configure --disable-gifview --disable-gifdiff \
     && make install
 
-RUN apk --no-cache del curl alpine-sdk wget autoconf automake
+RUN update-ca-certificates
 
 WORKDIR $SERVICE_ROOT
