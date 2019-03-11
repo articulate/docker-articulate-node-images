@@ -1,7 +1,7 @@
 FROM articulate/articulate-node:8-stretch-slim
 ARG VIPS_VERSION=8.6.3
 ENV LD_LIBRARY_PATH=/usr/local/lib
-ARG gifsicle_version=1.91
+ARG GIFSICLE_VERSION=1.91
 
 RUN apt-get update -qq \
     && apt-get install -y build-essential graphicsmagick-libmagick-dev-compat libexpat1-dev libfftw3-dev \
@@ -26,12 +26,14 @@ RUN tar xf vips.tar.gz \
     && make -s install-strip \
     && cd ..
 
-#ADD https://github.com/kohler/gifsicle/archive/v${gifsicle_version}.zip gifsicle.zip
-#RUN unzip gifsicle.zip && \
-#    cd gifsicle-${gifsicle_version} && \
-#    autoreconf -i && \
-#    ./configure --disable-gifview --disable-gifdiff && \
-#    make install
-#
-#RUN rm -rf /tmp/*
-#WORKDIR $SERVICE_ROOT
+# Install Gifsicle, a package to create, manipulate and optimise GIF images
+# http://www.lcdf.org/gifsicle/
+ADD https://github.com/kohler/gifsicle/archive/v${GIFSICLE_VERSION}.tar.gz gifsicle.tar.gz
+RUN tar xf gifsicle.tar.gz && \
+    cd gifsicle-${GIFSICLE_VERSION} && \
+    autoreconf -i && \
+    ./configure --disable-gifview --disable-gifdiff && \
+    make install
+
+RUN rm -rf /tmp/*
+WORKDIR $SERVICE_ROOT
