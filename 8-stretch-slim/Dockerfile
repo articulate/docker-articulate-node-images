@@ -5,7 +5,7 @@ ARG GIFSICLE_VERSION=1.91
 
 RUN apt-get update -qq \
     && apt-get install -y build-essential graphicsmagick-libmagick-dev-compat libexpat1-dev libfftw3-dev \
-    liborc-0.4-dev libpng-dev libtiff5-dev pngquant automake gtk-doc-tools libglib2.0-dev \
+    liborc-0.4-dev libpng-dev libtiff5-dev pngquant automake gtk-doc-tools libglib2.0-dev librsvg2-bin \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
