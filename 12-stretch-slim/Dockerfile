@@ -1,4 +1,4 @@
-FROM articulate/articulate-node:8-stretch-slim
+FROM articulate/articulate-node:12-stretch-slim
 ARG VIPS_VERSION=8.6.3
 ENV LD_LIBRARY_PATH=/usr/local/lib
 ARG GIFSICLE_VERSION=1.91
