@@ -1,4 +1,4 @@
-FROM articulate/articulate-node:8
+FROM articulate/articulate-node:12
 ARG vips_version=8.6.2
 ENV LD_LIBRARY_PATH=/usr/local/lib
 ARG gifsicle_version=1.91
