@@ -1,10 +1,14 @@
-default: build_10 build_12 build_14
+all: 10-stretch-slim 12-stretch-slim 14-stretch-slim
+.PHONY: all
 
-build_10:
+10-stretch-slim:
 	docker build -t local/articulate-node-images:10 10-stretch-slim/
+.PHONY: 10-stretch-slim
 
-build_12:
+12-stretch-slim:
 	docker build -t local/articulate-node-images:12 12-stretch-slim/
+.PHONY: 12-stretch-slim
 
-build_14:
+14-stretch-slim:
 	docker build -t local/articulate-node-images:14 14-stretch-slim/
+.PHONY: 14-stretch-slim
