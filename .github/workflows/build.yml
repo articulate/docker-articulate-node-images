@@ -1,0 +1,47 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  schedule: # Run everyday (after docker-articulate-node-images since we build off those)
+    - cron: "0 1 * * *"
+
+env:
+  IMAGE: articulate/articulate-node-images
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        tag:
+          - 10-stretch-slim
+          - 12-stretch-slim
+          - 14-stretch-slim
+        include:
+          - tag: 14-stretch-slim
+            latest: true
+    steps:
+      - uses: actions/checkout@v2
+      - uses: docker/setup-qemu-action@v1
+      - uses: docker/setup-buildx-action@v1
+      - id: meta
+        run: |
+          TAGS="${{ env.IMAGE }}:${{ matrix.tag }}"
+          [ -n "${{ matrix.latest }}" ] && TAGS="${TAGS},${{ env.IMAGE }}:latest"
+
+          echo "::set-output name=tags::$TAGS"
+      - uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: docker/build-push-action@v2
+        with:
+          context: ${{ matrix.tag }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          platforms: linux/amd64,linux/arm64/v8
+          cache-from: type=registry,ref=${{ env.IMAGE }}:${{ matrix.tag }}
+          cache-to: type=inline
