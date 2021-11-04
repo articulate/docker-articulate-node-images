@@ -20,8 +20,9 @@ jobs:
           - 10-stretch-slim
           - 12-stretch-slim
           - 14-stretch-slim
+          - 16-stretch-slim
         include:
-          - tag: 14-stretch-slim
+          - tag: 16-stretch-slim
             latest: true
     steps:
       - uses: actions/checkout@v2
