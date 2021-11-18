@@ -16,33 +16,41 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag:
-          - 10-stretch-slim
-          - 12-stretch-slim
-          - 14-stretch-slim
-          - 16-stretch-slim
         include:
-          - tag: 14-stretch-slim
-            latest: true
+          - context: 12/buster-slim
+            tags: 12-buster-slim
+          - context: 12/stretch-slim
+            tags: 12-stretch-slim
+          - context: 14/stretch-slim
+            tags: 14-stretch-slim,latest
+          - context: 14/buster-slim
+            tags: 14-buster-slim
+          - context: 16/stretch-slim
+            tags: 16-stretch-slim
+          - context: 16/buster-slim
+            tags: 16-buster-slim
     steps:
       - uses: actions/checkout@v2
       - uses: docker/setup-qemu-action@v1
       - uses: docker/setup-buildx-action@v1
-      - id: meta
-        run: |
-          TAGS="${{ env.IMAGE }}:${{ matrix.tag }}"
-          [ -n "${{ matrix.latest }}" ] && TAGS="${TAGS},${{ env.IMAGE }}:latest"
-
-          echo "::set-output name=tags::$TAGS"
       - uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: build info
+        id: meta
+        run: |
+          TAGS=()
+          IFS=',' read -ra tags <<< "${{ matrix.tags }}"
+          for tag in "${tags[@]}"; do TAGS+=("${IMAGE}:${tag}"); done
+
+          echo "::set-output name=tags::$(IFS=, ; echo "${TAGS[*]}")"
+          echo "::set-output name=cache::${TAGS[0]}"
       - uses: docker/build-push-action@v2
         with:
-          context: ${{ matrix.tag }}
+          context: ${{ matrix.context }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=registry,ref=${{ env.IMAGE }}:${{ matrix.tag }}
+          cache-from: type=registry,ref=${{ steps.meta.outputs.cache }}
           cache-to: type=inline

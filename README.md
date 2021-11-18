@@ -9,7 +9,7 @@ faster.
 2. Change the first line of your `images/Dockerfile` to be:
 
 ```dockerfile
-FROM local/articulate-node-images
+FROM local/articulate-node-images:<variant>
 ```
 
 3. Then in `images`, run:
