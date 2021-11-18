@@ -1,9 +1,5 @@
-all: 10-stretch-slim 12-stretch-slim 14-stretch-slim 16-stretch-slim
+all: 12-stretch-slim 14-stretch-slim 16-stretch-slim
 .PHONY: all
-
-10-stretch-slim:
-	docker build -t local/articulate-node-images:10 10-stretch-slim/
-.PHONY: 10-stretch-slim
 
 12-stretch-slim:
 	docker build -t local/articulate-node-images:12 12-stretch-slim/
