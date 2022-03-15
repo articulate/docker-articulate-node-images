@@ -48,3 +48,7 @@ all: 12 14 16 ## Build all images
 16-buster-slim: ## Build 16-buster-slim
 	docker build -t $(PREFIX)/articulate-node-images:16-buster-slim 16/buster-slim/
 .PHONY: 16-buster-slim
+
+16-bullseye-slim:
+	docker build -t $(PREFIX)/articulate-node-images:16-bullseye-slim 16/bullseye-slim/
+.PHONY: 16-bullseye-slim

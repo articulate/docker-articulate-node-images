@@ -14,6 +14,7 @@ jobs:
           - 12/stretch-slim
           - 14/buster-slim
           - 14/stretch-slim
+          - 16/bullseye-slim
           - 16/buster-slim
           - 16/stretch-slim
     steps:

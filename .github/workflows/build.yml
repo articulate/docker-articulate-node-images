@@ -29,6 +29,8 @@ jobs:
             tags: 16-stretch-slim
           - context: 16/buster-slim
             tags: 16-buster-slim
+          - context: 16/bullseye-slim
+            tags: 16-bullseye-slim
     steps:
       - uses: actions/checkout@v2
       - uses: docker/setup-qemu-action@v1
