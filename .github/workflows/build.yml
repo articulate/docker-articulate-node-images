@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - main
-  schedule: # Run everyday (after docker-articulate-node-images since we build off those)
+  schedule:
+    # Run everyday (after docker-articulate-node-images since we build off those)
     - cron: "0 1 * * *"
 
 env:
   IMAGE: articulate/articulate-node-images
+  LATEST: 14-stretch-slim
 
 jobs:
   build:
@@ -16,41 +18,33 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - context: 12/buster-slim
-            tags: 12-buster-slim
-          - context: 12/stretch-slim
-            tags: 12-stretch-slim
-          - context: 14/stretch-slim
-            tags: 14-stretch-slim,latest
-          - context: 14/buster-slim
-            tags: 14-buster-slim
-          - context: 16/stretch-slim
-            tags: 16-stretch-slim
-          - context: 16/buster-slim
-            tags: 16-buster-slim
-          - context: 16/bullseye-slim
-            tags: 16-bullseye-slim
+        dockerfile:
+          - 12/buster-slim
+          - 12/stretch-slim
+          - 14/stretch-slim
+          - 14/buster-slim
+          - 16/stretch-slim
+          - 16/buster-slim
+          - 16/bullseye-slim
     steps:
-      - uses: actions/checkout@v2
-      - uses: docker/setup-qemu-action@v1
-      - uses: docker/setup-buildx-action@v1
-      - uses: docker/login-action@v1
+      - uses: actions/checkout@v3
+      - uses: docker/setup-qemu-action@v2
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: build info
         id: meta
         run: |
-          TAGS=()
-          IFS=',' read -ra tags <<< "${{ matrix.tags }}"
-          for tag in "${tags[@]}"; do TAGS+=("${IMAGE}:${tag}"); done
+          TAG="${IMAGE}:$(echo "${{ matrix.dockerfile }}" | sed 's#/#-#')"
+          echo "cache=${TAG}" >> $GITHUB_OUTPUT
 
-          echo "::set-output name=tags::$(IFS=, ; echo "${TAGS[*]}")"
-          echo "::set-output name=cache::${TAGS[0]}"
-      - uses: docker/build-push-action@v2
+          [ "$TAG" == "${IMAGE}:${LATEST}" ] && TAG="${TAG},${IMAGE}:latest"
+          echo "tags=${TAG}" >> $GITHUB_OUTPUT
+      - uses: docker/build-push-action@v3
         with:
-          context: ${{ matrix.context }}
+          context: ${{ matrix.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           platforms: linux/amd64,linux/arm64/v8
