@@ -17,6 +17,7 @@ jobs:
           - 16/bullseye-slim
           - 16/buster-slim
           - 16/stretch-slim
+          - 18/bullseye-slim
     steps:
       - uses: actions/checkout@v3
       - uses: hadolint/hadolint-action@0a6d062e780d218ea909a18365e0ab2e36d09612 # pin@v2.0.0
